@@ -1,0 +1,63 @@
+:root {
+  --mt-gold: #ffd700;
+  --mt-gold-deep: #d4af37;
+  --mt-gold-dark: #b8860b;
+  --mt-bg: #050505;
+  --mt-surface: rgba(17, 17, 17, .72);
+  --mt-muted: #8a8a8a;
+  --mt-border: rgba(255, 215, 0, .18);
+  --mt-glow: 0 0 32px rgba(255, 215, 0, .12);
+  --mt-radius: 16px;
+}
+
+html, body, #app { min-height: 100%; }
+body {
+  background: var(--mt-bg) !important;
+  color: #f6f2e8 !important;
+  background-image: linear-gradient(rgba(255,215,0,.018) 1px, transparent 1px), linear-gradient(90deg, rgba(255,215,0,.018) 1px, transparent 1px), radial-gradient(circle at 12% 12%, rgba(184,134,11,.16), transparent 28rem), radial-gradient(circle at 88% 4%, rgba(255,215,0,.09), transparent 24rem) !important;
+  background-size: 42px 42px, 42px 42px, auto, auto !important;
+  background-attachment: fixed !important;
+}
+body::before { content: ''; position: fixed; inset: 0; pointer-events: none; z-index: -1; background: radial-gradient(circle at 50% 100%, rgba(255,215,0,.045), transparent 36rem); }
+
+/* Shared glass surfaces; intentionally limited to existing panel primitives. */
+.bg-neutral-800, .bg-neutral-900, .bg-gray-800, .bg-gray-900, .bg-white, .shadow-lg, [class*="rounded-lg"] {
+  background-color: var(--mt-surface) !important;
+  border: 1px solid var(--mt-border) !important;
+  box-shadow: var(--mt-glow), 0 16px 48px rgba(0,0,0,.24) !important;
+  backdrop-filter: blur(18px);
+}
+.bg-neutral-800:hover, .bg-gray-800:hover { border-color: rgba(255,215,0,.34) !important; }
+
+/* Branding and navigation. */
+header, nav, aside { background: rgba(5,5,5,.76) !important; border-color: var(--mt-border) !important; backdrop-filter: blur(20px); }
+a, button { transition: color .2s ease, background-color .2s ease, border-color .2s ease, transform .2s ease, box-shadow .2s ease; }
+a:hover, button:hover { transform: translateY(-1px); }
+.text-primary-500, .text-yellow-400, .text-amber-400 { color: var(--mt-gold) !important; }
+.bg-primary-500, .bg-yellow-500 { background: linear-gradient(135deg, var(--mt-gold), var(--mt-gold-deep)) !important; color: #0a0a0a !important; }
+
+/* Inputs, selects, tables, pagination, and modal primitives. */
+input, select, textarea { background: rgba(0,0,0,.38) !important; color: #fff !important; border-color: rgba(255,215,0,.2) !important; border-radius: 10px !important; }
+input:focus, select:focus, textarea:focus { outline: none !important; border-color: var(--mt-gold) !important; box-shadow: 0 0 0 3px rgba(255,215,0,.12) !important; }
+table { border-collapse: separate; border-spacing: 0 6px; }
+tbody tr { background: rgba(255,255,255,.025); }
+tbody tr:hover { background: rgba(255,215,0,.06); }
+[role="dialog"] { background: rgba(10,10,10,.88) !important; border: 1px solid rgba(255,215,0,.3) !important; backdrop-filter: blur(24px); box-shadow: 0 24px 90px rgba(0,0,0,.6), 0 0 40px rgba(255,215,0,.12) !important; }
+
+/* Console: preserve xterm's DOM/WebSocket behavior while giving it a premium shell. */
+.xterm { padding: 18px !important; }
+.xterm-viewport { scrollbar-color: rgba(255,215,0,.55) rgba(255,255,255,.04); scrollbar-width: thin; }
+[class*="terminal"] { border: 1px solid rgba(255,215,0,.2); border-radius: var(--mt-radius); background: rgba(0,0,0,.58) !important; box-shadow: inset 0 1px 0 rgba(255,255,255,.04), var(--mt-glow); }
+
+/* State colors stay semantic, not gold. */
+.text-green-400, .text-green-500 { color: #55d88a !important; }
+.text-red-400, .text-red-500 { color: #ff6b6b !important; }
+.text-amber-400, .text-yellow-400 { color: #ffc857 !important; }
+
+@media (max-width: 768px) {
+  .xterm { padding: 12px !important; }
+  body { background-size: 30px 30px, 30px 30px, auto, auto !important; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .001ms !important; animation-iteration-count: 1 !important; transition-duration: .001ms !important; scroll-behavior: auto !important; }
+}

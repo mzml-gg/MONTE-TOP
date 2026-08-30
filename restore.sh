@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+PANEL_PATH="${PANEL_PATH:-/var/www/pterodactyl}"; BACKUP_ROOT="${BACKUP_ROOT:-/var/backups/monte-top}"; [ "$(id -u)" -eq 0 ] || { echo 'Run as root.' >&2; exit 1; }; BACKUP="${1:-$(cat "$BACKUP_ROOT/latest" 2>/dev/null || true)}"; [ -d "$BACKUP" ] || { echo "Usage: $0 /var/backups/monte-top/YYYYMMDD-HHMMSS" >&2; exit 1; }
+restore_one() { local src="$1" dst="$2"; [ -f "$src" ] && install -D -m 0644 "$src" "$dst"; }
+restore_one "$BACKUP/index.tsx.before" "$PANEL_PATH/resources/scripts/index.tsx"; restore_one "$BACKUP/LoginFormContainer.tsx.before" "$PANEL_PATH/resources/scripts/components/auth/LoginFormContainer.tsx"; restore_one "$BACKUP/Console.tsx.before" "$PANEL_PATH/resources/scripts/components/server/console/Console.tsx"; restore_one "$BACKUP/monte-top.css" "$PANEL_PATH/resources/scripts/theme/monte-top.css"; restore_one "$BACKUP/monte-top.svg" "$PANEL_PATH/public/assets/svgs/monte-top.svg"; printf 'Restored backup %s. Rebuild with the panel build command for your installed version.\n' "$BACKUP"

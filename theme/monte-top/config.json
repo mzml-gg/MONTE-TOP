@@ -1,0 +1,17 @@
+{
+  "name": "MONTE TOP",
+  "version": "1.0.0",
+  "tokens": {
+    "gold": "#FFD700",
+    "goldDeep": "#D4AF37",
+    "goldDark": "#B8860B",
+    "background": "#050505",
+    "surface": "rgba(17, 17, 17, 0.72)",
+    "muted": "#8A8A8A",
+    "glassOpacity": 0.72,
+    "borderOpacity": 0.18,
+    "glowIntensity": 0.24,
+    "radius": "16px",
+    "animationIntensity": 1
+  }
+}
