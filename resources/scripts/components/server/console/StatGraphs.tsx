@@ -4,10 +4,8 @@ import { SocketEvent } from '@/components/server/events';
 import useWebsocketEvent from '@/plugins/useWebsocketEvent';
 import { Line } from 'react-chartjs-2';
 import { useChart, useChartTickLabel } from '@/components/server/console/chart';
-import { hexToRgba } from '@/lib/helpers';
 import { bytesToString } from '@/lib/formatters';
-import { CloudDownloadIcon, CloudUploadIcon } from '@heroicons/react/solid';
-import { theme } from 'twin.macro';
+import { ArrowDownRight, ArrowUpRight, Cpu, HardDrive, Network as NetworkIcon } from 'lucide-react';
 import ChartBlock from '@/components/server/console/ChartBlock';
 import Tooltip from '@/components/elements/tooltip/Tooltip';
 
@@ -27,6 +25,15 @@ export default () => {
                         callback(value) {
                             return bytesToString(typeof value === 'string' ? parseInt(value, 10) : value);
                         },
+                        color: '#A89F9F',
+                    },
+                    grid: {
+                        color: 'rgba(212, 175, 55, 0.08)',
+                    },
+                },
+                x: {
+                    grid: {
+                        display: false,
                     },
                 },
             },
@@ -35,11 +42,28 @@ export default () => {
             return {
                 ...opts,
                 label: !index ? 'Network In' : 'Network Out',
-                borderColor: !index ? theme('colors.cyan.400') : theme('colors.yellow.400'),
-                backgroundColor: hexToRgba(!index ? theme('colors.cyan.700') : theme('colors.yellow.700'), 0.5),
+                borderColor: !index ? '#F2D675' : '#B88A20',
+                backgroundColor: !index ? 'rgba(242, 214, 117, 0.15)' : 'rgba(184, 138, 32, 0.15)',
+                tension: 0.4,
+                fill: true,
             };
         },
     });
+
+    // Custom dark crimson & gold line styling
+    if (cpu.props.data && cpu.props.data.datasets && cpu.props.data.datasets[0]) {
+        cpu.props.data.datasets[0].borderColor = '#D4AF37';
+        cpu.props.data.datasets[0].backgroundColor = 'rgba(58, 10, 10, 0.4)';
+        cpu.props.data.datasets[0].tension = 0.4;
+        cpu.props.data.datasets[0].fill = true;
+    }
+
+    if (memory.props.data && memory.props.data.datasets && memory.props.data.datasets[0]) {
+        memory.props.data.datasets[0].borderColor = '#F2D675';
+        memory.props.data.datasets[0].backgroundColor = 'rgba(33, 6, 6, 0.5)';
+        memory.props.data.datasets[0].tension = 0.4;
+        memory.props.data.datasets[0].fill = true;
+    }
 
     useEffect(() => {
         if (status === 'offline') {
@@ -68,23 +92,45 @@ export default () => {
 
     return (
         <>
-            <ChartBlock title={'CPU Load'}>
+            <ChartBlock
+                title={'CPU Load'}
+                legend={
+                    <span className={'flex items-center space-x-1'}>
+                        <Cpu className={'w-3.5 h-3.5 text-[#D4AF37]'} />
+                        <span>Limit: {limits.cpu ? `${limits.cpu}%` : 'Unlimited'}</span>
+                    </span>
+                }
+            >
                 <Line {...cpu.props} />
             </ChartBlock>
-            <ChartBlock title={'Memory'}>
+
+            <ChartBlock
+                title={'Memory Usage'}
+                legend={
+                    <span className={'flex items-center space-x-1'}>
+                        <HardDrive className={'w-3.5 h-3.5 text-[#F2D675]'} />
+                        <span>Limit: {limits.memory ? `${limits.memory} MiB` : 'Unlimited'}</span>
+                    </span>
+                }
+            >
                 <Line {...memory.props} />
             </ChartBlock>
+
             <ChartBlock
-                title={'Network'}
+                title={'Network Bandwidth'}
                 legend={
-                    <>
-                        <Tooltip arrow content={'Inbound'}>
-                            <CloudDownloadIcon className={'mr-2 w-4 h-4 text-yellow-400'} />
+                    <div className={'flex items-center space-x-3'}>
+                        <Tooltip arrow content={'Inbound (In)'}>
+                            <span className={'flex items-center text-[#F2D675]'}>
+                                <ArrowDownRight className={'w-3.5 h-3.5 mr-1'} /> In
+                            </span>
                         </Tooltip>
-                        <Tooltip arrow content={'Outbound'}>
-                            <CloudUploadIcon className={'w-4 h-4 text-cyan-400'} />
+                        <Tooltip arrow content={'Outbound (Out)'}>
+                            <span className={'flex items-center text-[#B88A20]'}>
+                                <ArrowUpRight className={'w-3.5 h-3.5 mr-1'} /> Out
+                            </span>
                         </Tooltip>
-                    </>
+                    </div>
                 }
             >
                 <Line {...network.props} />

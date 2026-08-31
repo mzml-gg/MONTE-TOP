@@ -1,55 +1,41 @@
 import React, { forwardRef } from 'react';
 import { Form } from 'formik';
-import styled from 'styled-components/macro';
-import { breakpoint } from '@/theme';
 import FlashMessageRender from '@/components/FlashMessageRender';
-import tw from 'twin.macro';
+import { Cpu } from 'lucide-react';
 
 type Props = React.DetailedHTMLProps<React.FormHTMLAttributes<HTMLFormElement>, HTMLFormElement> & {
     title?: string;
 };
 
-const Container = styled.div`
-    ${breakpoint('sm')`
-        ${tw`w-4/5 mx-auto`}
-    `};
-
-    ${breakpoint('md')`
-        ${tw`p-10`}
-    `};
-
-    ${breakpoint('lg')`
-        ${tw`w-3/5`}
-    `};
-
-    ${breakpoint('xl')`
-        ${tw`w-full`}
-        max-width: 700px;
-    `};
-`;
-
 export default forwardRef<HTMLFormElement, Props>(({ title, ...props }, ref) => (
-    <Container>
-        {title && <h2 css={tw`text-3xl text-center text-neutral-100 font-medium py-4`}>{title}</h2>}
-        <FlashMessageRender css={tw`mb-2 px-1`} />
-        <Form {...props} ref={ref}>
-            <div css={tw`md:flex w-full bg-white shadow-lg rounded-lg p-6 md:pl-0 mx-1`}>
-                <div css={tw`flex-none select-none mb-6 md:mb-0 self-center`}>
-                    <img src={'/assets/svgs/monte-top.svg'} alt={'MONTE TOP'} css={tw`block w-48 md:w-64 mx-auto`} />
+    <div className={'min-h-screen w-full flex flex-col items-center justify-center p-4 bg-[#070303] bg-radial from-[#3A0A0A]/40 via-[#070303] to-[#070303]'}>
+        <div className={'w-full max-w-md'}>
+            <div className={'flex flex-col items-center mb-8 text-center'}>
+                <div className={'w-14 h-14 rounded-2xl bg-[#3A0A0A] border border-[#D4AF37] flex items-center justify-center shadow-[0_0_30px_rgba(212,175,55,0.4)] mb-3'}>
+                    <Cpu className={'w-8 h-8 text-[#F2D675]'} />
                 </div>
-                <div css={tw`flex-1`}>{props.children}</div>
+                <h1 className={'font-extrabold text-3xl text-[#F2D675] tracking-widest font-mono uppercase'}>
+                    MONTE TOP
+                </h1>
+                <p className={'text-xs text-[#A89F9F] tracking-wider uppercase font-mono mt-1'}>
+                    Cloud Infrastructure Panel
+                </p>
             </div>
-        </Form>
-        <p css={tw`text-center text-neutral-500 text-xs mt-4`}>
-            &copy; 2015 - {new Date().getFullYear()}&nbsp;
-            <a
-                rel={'noopener nofollow noreferrer'}
-                href={'https://pterodactyl.io'}
-                target={'_blank'}
-                css={tw`no-underline text-neutral-500 hover:text-neutral-300`}
-            >
-                MONTE TOP / Pterodactyl Theme
-            </a>
-        </p>
-    </Container>
+
+            <FlashMessageRender className={'mb-4'} />
+
+            <Form {...props} ref={ref} className={'bg-[#0D0505]/90 border border-[#D4AF37]/30 rounded-2xl p-8 shadow-[0_16px_60px_rgba(0,0,0,0.8)] backdrop-blur-xl'}>
+                {title && (
+                    <h2 className={'text-xl font-bold text-[#FFFFFF] text-center mb-6 font-mono tracking-tight'}>
+                        {title}
+                    </h2>
+                )}
+                {props.children}
+            </Form>
+
+            <p className={'text-center text-[#A89F9F]/60 text-xs mt-6 font-mono'}>
+                &copy; {new Date().getFullYear()} MONTE TOP &bull; Powered by Pterodactyl
+            </p>
+        </div>
+    </div>
 ));

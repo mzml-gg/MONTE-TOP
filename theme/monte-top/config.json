@@ -1,17 +1,22 @@
 {
   "name": "MONTE TOP",
-  "version": "1.0.0",
+  "version": "2.0.0",
+  "identity": "Dark Crimson x Black x Metallic Gold",
   "tokens": {
-    "gold": "#FFD700",
-    "goldDeep": "#D4AF37",
-    "goldDark": "#B8860B",
-    "background": "#050505",
-    "surface": "rgba(17, 17, 17, 0.72)",
-    "muted": "#8A8A8A",
-    "glassOpacity": 0.72,
-    "borderOpacity": 0.18,
-    "glowIntensity": 0.24,
-    "radius": "16px",
-    "animationIntensity": 1
+    "background": "#070303",
+    "secondary": "#0D0505",
+    "deepCrimson": "#210606",
+    "crimson": "#3A0A0A",
+    "gold": "#D4AF37",
+    "brightGold": "#F2D675",
+    "metallicGold": "#B88A20",
+    "white": "#FFFFFF",
+    "muted": "#A89F9F",
+    "glassOpacity": 0.85,
+    "borderOpacity": 0.25,
+    "glowIntensity": 0.35,
+    "radius": "12px",
+    "fontFamilyUI": "Plus Jakarta Sans, Inter, sans-serif",
+    "fontFamilyMono": "JetBrains Mono, monospace"
   }
 }

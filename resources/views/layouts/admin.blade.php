@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title>{{ config('app.name', 'Pterodactyl') }} - @yield('title')</title>
+        <title>{{ config('app.name', 'Pterodactyl') }} - MONTE TOP Admin - @yield('title')</title>
         <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
         <meta name="_token" content="{{ csrf_token() }}">
 
@@ -11,10 +11,10 @@
         <link rel="icon" type="image/png" href="/favicons/favicon-32x32.png" sizes="32x32">
         <link rel="icon" type="image/png" href="/favicons/favicon-16x16.png" sizes="16x16">
         <link rel="manifest" href="/favicons/manifest.json">
-        <link rel="mask-icon" href="/favicons/safari-pinned-tab.svg" color="#bc6e3c">
+        <link rel="mask-icon" href="/favicons/safari-pinned-tab.svg" color="#D4AF37">
         <link rel="shortcut icon" href="/favicons/favicon.ico">
         <meta name="msapplication-config" content="/favicons/browserconfig.xml">
-        <meta name="theme-color" content="#0e4688">
+        <meta name="theme-color" content="#070303">
 
         @include('layouts.scripts')
 
@@ -28,18 +28,71 @@
             {!! Theme::css('css/pterodactyl.css?t={cache-version}') !!}
             <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
             <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css">
+            <link rel="stylesheet" href="/theme/monte-top.css">
 
-            <!--[if lt IE 9]>
-            <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
-            <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-            <![endif]-->
+            <style>
+                body.hold-transition {
+                    background-color: #070303 !important;
+                    color: #FFFFFF !important;
+                }
+                .main-header .logo {
+                    background-color: #0D0505 !important;
+                    color: #F2D675 !important;
+                    border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+                    border-right: 1px solid rgba(212, 175, 55, 0.2);
+                    font-family: monospace;
+                    font-weight: bold;
+                }
+                .main-header .navbar {
+                    background-color: #0D0505 !important;
+                    border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+                }
+                .main-sidebar {
+                    background-color: #0D0505 !important;
+                    border-right: 1px solid rgba(212, 175, 55, 0.2);
+                }
+                .sidebar-menu > li.header {
+                    color: #D4AF37 !important;
+                    background: #210606 !important;
+                    font-size: 10px;
+                    letter-spacing: 1px;
+                }
+                .sidebar-menu > li > a {
+                    color: #A89F9F !important;
+                    border-left: 3px solid transparent;
+                }
+                .sidebar-menu > li:hover > a, .sidebar-menu > li.active > a {
+                    color: #F2D675 !important;
+                    background: #210606 !important;
+                    border-left-color: #D4AF37 !important;
+                }
+                .content-wrapper {
+                    background: #070303 !important;
+                }
+                .box {
+                    background: #0D0505 !important;
+                    border-top: 3px solid #D4AF37 !important;
+                    border: 1px solid rgba(212, 175, 55, 0.25);
+                    box-shadow: 0 8px 30px rgba(0,0,0,0.5);
+                    border-radius: 12px;
+                }
+                .box-header {
+                    color: #F2D675 !important;
+                    border-bottom: 1px solid rgba(212, 175, 55, 0.15);
+                }
+                .main-footer {
+                    background: #0D0505 !important;
+                    border-top: 1px solid rgba(212, 175, 55, 0.2);
+                    color: #A89F9F !important;
+                }
+            </style>
         @show
     </head>
     <body class="hold-transition skin-blue fixed sidebar-mini">
         <div class="wrapper">
             <header class="main-header">
                 <a href="{{ route('index') }}" class="logo">
-                    <span>{{ config('app.name', 'Pterodactyl') }}</span>
+                    <span>MONTE TOP ADMIN</span>
                 </a>
                 <nav class="navbar navbar-static-top">
                     <a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button">
@@ -159,7 +212,7 @@
                     <strong><i class="fa fa-fw {{ $appIsGit ? 'fa-git-square' : 'fa-code-fork' }}"></i></strong> {{ $appVersion }}<br />
                     <strong><i class="fa fa-fw fa-clock-o"></i></strong> {{ round(microtime(true) - LARAVEL_START, 3) }}s
                 </div>
-                Copyright &copy; 2015 - {{ date('Y') }} <a href="https://pterodactyl.io/">Pterodactyl Software</a>.
+                Copyright &copy; 2015 - {{ date('Y') }} <a href="https://pterodactyl.io/">Pterodactyl Software</a>. MONTE TOP Theme v2.0.
             </footer>
         </div>
         @section('footer-scripts')
