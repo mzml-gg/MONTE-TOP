@@ -9,46 +9,45 @@ import { ScrollDownHelperAddon } from '@/plugins/XtermScrollDownHelperAddon';
 import SpinnerOverlay from '@/components/elements/SpinnerOverlay';
 import { ServerContext } from '@/state/server';
 import { usePermissions } from '@/plugins/usePermissions';
-import { theme as th } from 'twin.macro';
 import useEventListener from '@/plugins/useEventListener';
 import { debounce } from 'debounce';
 import { usePersistedState } from '@/plugins/usePersistedState';
 import { SocketEvent, SocketRequest } from '@/components/server/events';
 import classNames from 'classnames';
-import { ChevronDoubleRightIcon } from '@heroicons/react/solid';
 import useFlash from '@/plugins/useFlash';
+import { Copy, Terminal as TerminalIcon, ChevronRight } from 'lucide-react';
 
 import 'xterm/css/xterm.css';
 import styles from './style.module.css';
 
 const theme = {
-    background: th`colors.black`.toString(),
-    cursor: 'transparent',
-    black: th`colors.black`.toString(),
-    red: '#E54B4B',
-    green: '#9ECE58',
-    yellow: '#FAED70',
-    blue: '#396FE2',
-    magenta: '#BB80B3',
-    cyan: '#2DDAFD',
-    white: '#d0d0d0',
-    brightBlack: 'rgba(255, 255, 255, 0.2)',
+    background: '#070303',
+    cursor: '#D4AF37',
+    black: '#070303',
+    red: '#ff6b6b',
+    green: '#55d88a',
+    yellow: '#F2D675',
+    blue: '#82AAFF',
+    magenta: '#C792EA',
+    cyan: '#89DDFF',
+    white: '#FFFFFF',
+    brightBlack: 'rgba(255, 255, 255, 0.3)',
     brightRed: '#FF5370',
     brightGreen: '#C3E88D',
-    brightYellow: '#FFCB6B',
+    brightYellow: '#F2D675',
     brightBlue: '#82AAFF',
     brightMagenta: '#C792EA',
     brightCyan: '#89DDFF',
     brightWhite: '#ffffff',
-    selection: '#FAF089',
+    selection: 'rgba(212, 175, 55, 0.3)',
 };
 
 const terminalProps: ITerminalOptions = {
     disableStdin: true,
     cursorStyle: 'underline',
     allowTransparency: true,
-    fontSize: 12,
-    fontFamily: th('fontFamily.mono'),
+    fontSize: 13,
+    fontFamily: "'JetBrains Mono', monospace",
     rows: 30,
     theme: theme,
 };
@@ -71,7 +70,7 @@ export default () => {
     const [historyIndex, setHistoryIndex] = useState(-1);
     const [outputLines, setOutputLines] = useState<string[]>([]);
     const { addFlash } = useFlash();
-    // SearchBarAddon has hardcoded z-index: 999 :(
+
     const zIndex = `
     .xterm-search-bar__addon {
         z-index: 10;
@@ -86,7 +85,6 @@ export default () => {
 
     const handleTransferStatus = (status: string) => {
         switch (status) {
-            // Sent by either the source or target node if a failure occurs.
             case 'failure':
                 terminal.writeln(TERMINAL_PRELUDE + 'Transfer has failed.\u001b[0m');
                 return;
@@ -118,18 +116,13 @@ export default () => {
     const handleCommandKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
         if (e.key === 'ArrowUp') {
             const newIndex = Math.min(historyIndex + 1, history!.length - 1);
-
             setHistoryIndex(newIndex);
             e.currentTarget.value = history![newIndex] || '';
-
-            // By default up arrow will also bring the cursor to the start of the line,
-            // so we'll preventDefault to keep it at the end.
             e.preventDefault();
         }
 
         if (e.key === 'ArrowDown') {
             const newIndex = Math.max(historyIndex - 1, -1);
-
             setHistoryIndex(newIndex);
             e.currentTarget.value = history![newIndex] || '';
         }
@@ -138,7 +131,6 @@ export default () => {
         if (e.key === 'Enter' && command.length > 0) {
             setHistory((prevHistory) => [command, ...prevHistory!].slice(0, 32));
             setHistoryIndex(-1);
-
             instance && instance.send('send command', command);
             e.currentTarget.value = '';
         }
@@ -154,14 +146,10 @@ export default () => {
             terminal.loadAddon(scrollDownHelperAddon);
 
             terminal.open(ref.current);
-
-            // Activate Unicode 11 for proper emoji and special character width handling
             terminal.unicode.activeVersion = '11';
-
             fitAddon.fit();
             searchBar.addNewStyle(zIndex);
 
-            // Add support for capturing keys
             terminal.attachCustomKeyEventHandler((e: KeyboardEvent) => {
                 if ((e.ctrlKey || e.metaKey) && e.key === 'c') {
                     document.execCommand('copy');
@@ -199,7 +187,6 @@ export default () => {
         };
 
         if (connected && instance) {
-            // Do not clear the console if the server is being transferred.
             if (!isTransferring) {
                 terminal.clear();
             }
@@ -220,28 +207,45 @@ export default () => {
     }, [connected, instance]);
 
     return (
-        <div className={classNames(styles.terminal, 'relative')}>
+        <div className={'w-full rounded-2xl bg-[#070303] border border-[#D4AF37]/30 shadow-[0_8px_30px_rgba(0,0,0,0.7)] overflow-hidden relative'}>
             <SpinnerOverlay visible={!connected} size={'large'} />
-            <div className={'flex items-center justify-between px-4 py-3 bg-black bg-opacity-40 border-b border-yellow-700 border-opacity-20'}>
-                <div className={'flex items-center space-x-2 text-xs uppercase tracking-widest text-gray-400'}>
-                    <span className={'inline-block w-2 h-2 rounded-full bg-green-400 shadow-[0_0_10px_rgba(85,216,138,.8)]'} />
-                    <span>MONTE TOP / CONSOLE</span>
+
+            {/* Header Toolbar */}
+            <div className={'flex items-center justify-between px-5 py-3.5 bg-[#0D0505] border-b border-[#D4AF37]/20'}>
+                <div className={'flex items-center space-x-2.5 font-mono text-xs uppercase tracking-wider text-[#F2D675]'}>
+                    <TerminalIcon className={'w-4 h-4 text-[#D4AF37]'} />
+                    <span className={'font-bold'}>MONTE TOP CONSOLE</span>
+                    <span className={'w-2 h-2 rounded-full bg-[#55d88a] shadow-[0_0_8px_#55d88a]'} />
                 </div>
-                <button type={'button'} onClick={copyLastLines} disabled={!outputLines.length} className={'text-xs px-3 py-1.5 rounded border border-yellow-500 border-opacity-30 text-yellow-300 hover:bg-yellow-500 hover:bg-opacity-10 disabled:opacity-40 disabled:cursor-not-allowed'}>
-                    Copy Last 100 Lines
+
+                <button
+                    type={'button'}
+                    onClick={copyLastLines}
+                    disabled={!outputLines.length}
+                    className={
+                        'flex items-center space-x-2 text-xs px-3 py-1.5 rounded-lg border border-[#D4AF37]/40 text-[#F2D675] bg-[#210606] hover:bg-[#B88A20] hover:text-[#070303] transition-all duration-200 disabled:opacity-40 disabled:cursor-not-allowed font-medium'
+                    }
+                >
+                    <Copy className={'w-3.5 h-3.5'} />
+                    <span>Copy Last 100 Lines</span>
                 </button>
             </div>
-            <div
-                className={classNames(styles.container, styles.overflows_container, { 'rounded-b': !canSendCommands })}
-            >
+
+            <div className={classNames(styles.container, styles.overflows_container, 'p-3 bg-[#070303]')}>
                 <div className={'h-full'}>
                     <div id={styles.terminal} ref={ref} />
                 </div>
             </div>
+
             {canSendCommands && (
-                <div className={classNames('relative', styles.overflows_container)}>
+                <div className={'relative border-t border-[#D4AF37]/20 bg-[#0D0505]'}>
+                    <div className={'absolute left-4 top-1/2 -translate-y-1/2 text-[#D4AF37]'}>
+                        <ChevronRight className={'w-5 h-5'} />
+                    </div>
                     <input
-                        className={classNames('peer', styles.command_input)}
+                        className={
+                            'w-full pl-11 pr-4 py-3 bg-transparent text-[#FFFFFF] placeholder-[#A89F9F]/60 text-sm font-mono outline-none border-none focus:ring-0'
+                        }
                         type={'text'}
                         placeholder={'Type a command...'}
                         aria-label={'Console command input.'}
@@ -250,14 +254,6 @@ export default () => {
                         autoCorrect={'off'}
                         autoCapitalize={'none'}
                     />
-                    <div
-                        className={classNames(
-                            'text-gray-100 peer-focus:text-gray-50 peer-focus:animate-pulse',
-                            styles.command_icon
-                        )}
-                    >
-                        <ChevronDoubleRightIcon className={'w-4 h-4'} />
-                    </div>
                 </div>
             )}
         </div>

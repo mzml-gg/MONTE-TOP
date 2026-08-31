@@ -1,5 +1,3 @@
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faFileAlt, faFileArchive, faFileImport, faFolder } from '@fortawesome/free-solid-svg-icons';
 import { encodePathSegments } from '@/helpers';
 import { differenceInHours, format, formatDistanceToNow } from 'date-fns';
 import React, { memo } from 'react';
@@ -14,6 +12,75 @@ import { usePermissions } from '@/plugins/usePermissions';
 import { join } from 'pathe';
 import { bytesToString } from '@/lib/formatters';
 import styles from './style.module.css';
+import {
+    Folder,
+    File,
+    FileCode,
+    FileText,
+    FileArchive,
+    Image,
+    Database,
+    Link as LinkIcon,
+    Sliders,
+    Terminal
+} from 'lucide-react';
+
+const renderFileIcon = (file: FileObject) => {
+    if (!file.isFile) {
+        return <Folder className={'w-5 h-5 text-[#D4AF37]'} />;
+    }
+
+    if (file.isSymlink) {
+        return <LinkIcon className={'w-5 h-5 text-[#F2D675]'} />;
+    }
+
+    if (file.isArchiveType()) {
+        return <FileArchive className={'w-5 h-5 text-[#B88A20]'} />;
+    }
+
+    const ext = file.name.split('.').pop()?.toLowerCase() || '';
+
+    switch (ext) {
+        case 'png':
+        case 'jpg':
+        case 'jpeg':
+        case 'gif':
+        case 'svg':
+        case 'webp':
+            return <Image className={'w-5 h-5 text-[#55d88a]'} />;
+        case 'js':
+        case 'jsx':
+        case 'ts':
+        case 'tsx':
+        case 'json':
+        case 'html':
+        case 'css':
+            return <FileCode className={'w-5 h-5 text-[#F2D675]'} />;
+        case 'sh':
+        case 'py':
+        case 'php':
+        case 'bash':
+            return <Terminal className={'w-5 h-5 text-[#D4AF37]'} />;
+        case 'sql':
+        case 'db':
+        case 'sqlite':
+            return <Database className={'w-5 h-5 text-[#ff6b6b]'} />;
+        case 'yml':
+        case 'yaml':
+        case 'env':
+        case 'conf':
+        case 'ini':
+        case 'properties':
+        case 'toml':
+            return <Sliders className={'w-5 h-5 text-[#F2D675]'} />;
+        case 'log':
+        case 'txt':
+        case 'md':
+            return <FileText className={'w-5 h-5 text-[#A89F9F]'} />;
+        default:
+            return <File className={'w-5 h-5 text-[#A89F9F]'} />;
+    }
+};
 
 const Clickable: React.FC<{ file: FileObject }> = memo(({ file, children }) => {
     const [canRead] = usePermissions(['file.read']);
@@ -36,7 +103,9 @@ const Clickable: React.FC<{ file: FileObject }> = memo(({ file, children }) => {
 
 const FileObjectRow = ({ file }: { file: FileObject }) => (
     <div
-        className={styles.file_row}
+        className={
+            'group flex items-center px-4 py-3 mb-1.5 rounded-xl bg-[#0D0505]/70 border border-[#D4AF37]/15 hover:border-[#D4AF37]/40 hover:bg-[#210606]/50 transition-all duration-200 shadow-sm'
+        }
         key={file.name}
         onContextMenu={(e) => {
             e.preventDefault();
@@ -45,18 +114,18 @@ const FileObjectRow = ({ file }: { file: FileObject }) => (
     >
         <SelectFileCheckbox name={file.name} />
         <Clickable file={file}>
-            <div css={tw`flex-none text-neutral-400 ml-6 mr-4 text-lg pl-3`}>
-                {file.isFile ? (
-                    <FontAwesomeIcon
-                        icon={file.isSymlink ? faFileImport : file.isArchiveType() ? faFileArchive : faFileAlt}
-                    />
-                ) : (
-                    <FontAwesomeIcon icon={faFolder} />
-                )}
+            <div css={tw`flex-none ml-4 mr-3`}>
+                {renderFileIcon(file)}
             </div>
-            <div css={tw`flex-1 truncate`}>{file.name}</div>
-            {file.isFile && <div css={tw`w-1/6 text-right mr-4 hidden sm:block`}>{bytesToString(file.size)}</div>}
-            <div css={tw`w-1/5 text-right mr-4 hidden md:block`} title={file.modifiedAt.toString()}>
+            <div css={tw`flex-1 truncate font-medium text-sm text-[#FFFFFF] font-mono group-hover:text-[#F2D675] transition-colors`}>
+                {file.name}
+            </div>
+            {file.isFile && (
+                <div css={tw`w-1/6 text-right mr-4 hidden sm:block font-mono text-xs text-[#A89F9F]`}>
+                    {bytesToString(file.size)}
+                </div>
+            )}
+            <div css={tw`w-1/5 text-right mr-4 hidden md:block font-mono text-xs text-[#A89F9F]`} title={file.modifiedAt.toString()}>
                 {Math.abs(differenceInHours(file.modifiedAt, new Date())) > 48
                     ? format(file.modifiedAt, 'MMM do, yyyy h:mma')
                     : formatDistanceToNow(file.modifiedAt, { addSuffix: true })}

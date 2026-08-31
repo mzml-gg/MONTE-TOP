@@ -11,86 +11,119 @@ interface Props {
 }
 
 const ButtonStyle = styled.button<Omit<Props, 'isLoading'>>`
-    ${tw`relative inline-block rounded p-2 uppercase tracking-wide text-sm transition-all duration-150 border`};
+    ${tw`relative inline-flex items-center justify-center font-medium rounded-xl transition-all duration-200 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed select-none`};
 
+    height: 40px;
+    border-radius: 10px;
+
+    /* Base Tactile FX */
+    &:active:not(:disabled) {
+        transform: scale(0.97);
+    }
+
+    /* Primary MONTE TOP Button (Dark Crimson + Gold Edge + Metallic Gold Hover) */
     ${(props) =>
         ((!props.isSecondary && !props.color) || props.color === 'primary') &&
         css<Props>`
-            ${(props) => !props.isSecondary && tw`bg-primary-500 border-primary-600 border text-primary-50`};
+            background-color: #210606;
+            border: 1px solid rgba(212, 175, 55, 0.4);
+            color: #F2D675;
+            box-shadow: 0 4px 15px rgba(33, 6, 6, 0.4), inset 0 1px 0 rgba(242, 214, 117, 0.15);
 
             &:hover:not(:disabled) {
-                ${tw`bg-primary-600 border-primary-700`};
+                background-color: #B88A20;
+                border-color: #F2D675;
+                color: #070303;
+                box-shadow: 0 0 20px rgba(212, 175, 55, 0.35);
             }
         `};
 
-    ${(props) =>
-        props.color === 'grey' &&
-        css`
-            ${tw`border-neutral-600 bg-neutral-500 text-neutral-50`};
-
-            &:hover:not(:disabled) {
-                ${tw`bg-neutral-600 border-neutral-700`};
-            }
-        `};
-
-    ${(props) =>
-        props.color === 'green' &&
-        css<Props>`
-            ${tw`border-green-600 bg-green-500 text-green-50`};
-
-            &:hover:not(:disabled) {
-                ${tw`bg-green-600 border-green-700`};
-            }
-
-            ${(props) =>
-                props.isSecondary &&
-                css`
-                    &:active:not(:disabled) {
-                        ${tw`bg-green-600 border-green-700`};
-                    }
-                `};
-        `};
-
-    ${(props) =>
-        props.color === 'red' &&
-        css<Props>`
-            ${tw`border-red-600 bg-red-500 text-red-50`};
-
-            &:hover:not(:disabled) {
-                ${tw`bg-red-600 border-red-700`};
-            }
-
-            ${(props) =>
-                props.isSecondary &&
-                css`
-                    &:active:not(:disabled) {
-                        ${tw`bg-red-600 border-red-700`};
-                    }
-                `};
-        `};
-
-    ${(props) => props.size === 'xsmall' && tw`px-2 py-1 text-xs`};
-    ${(props) => (!props.size || props.size === 'small') && tw`px-4 py-2`};
-    ${(props) => props.size === 'large' && tw`p-4 text-sm`};
-    ${(props) => props.size === 'xlarge' && tw`p-4 w-full`};
-
+    /* Secondary Glass Button */
     ${(props) =>
         props.isSecondary &&
         css<Props>`
-            ${tw`border-neutral-600 bg-transparent text-neutral-200`};
+            background-color: rgba(13, 5, 5, 0.6);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            color: #FFFFFF;
+            backdrop-filter: blur(8px);
 
             &:hover:not(:disabled) {
-                ${tw`border-neutral-500 text-neutral-100`};
-                ${(props) => props.color === 'red' && tw`bg-red-500 border-red-600 text-red-50`};
-                ${(props) => props.color === 'primary' && tw`bg-primary-500 border-primary-600 text-primary-50`};
-                ${(props) => props.color === 'green' && tw`bg-green-500 border-green-600 text-green-50`};
+                background-color: rgba(58, 10, 10, 0.5);
+                border-color: rgba(212, 175, 55, 0.5);
+                color: #F2D675;
+                box-shadow: 0 0 15px rgba(212, 175, 55, 0.15);
             }
         `};
 
-    &:disabled {
-        opacity: 0.55;
-        cursor: default;
-    }
+    /* Grey / Neutral Button */
+    ${(props) =>
+        props.color === 'grey' &&
+        css`
+            background-color: #0D0505;
+            border: 1px solid rgba(168, 159, 159, 0.2);
+            color: #A89F9F;
+
+            &:hover:not(:disabled) {
+                background-color: #210606;
+                border-color: rgba(212, 175, 55, 0.3);
+                color: #FFFFFF;
+            }
+        `};
+
+    /* Green / Success Button */
+    ${(props) =>
+        props.color === 'green' &&
+        css<Props>`
+            background-color: rgba(85, 216, 138, 0.15);
+            border: 1px solid rgba(85, 216, 138, 0.5);
+            color: #55d88a;
+
+            &:hover:not(:disabled) {
+                background-color: #55d88a;
+                color: #070303;
+                box-shadow: 0 0 20px rgba(85, 216, 138, 0.4);
+            }
+        `};
+
+    /* Red / Danger Button */
+    ${(props) =>
+        props.color === 'red' &&
+        css<Props>`
+            background-color: rgba(58, 10, 10, 0.7);
+            border: 1px solid rgba(255, 107, 107, 0.5);
+            color: #ff6b6b;
+
+            &:hover:not(:disabled) {
+                background-color: #ff6b6b;
+                color: #070303;
+                box-shadow: 0 0 20px rgba(255, 107, 107, 0.4);
+            }
+        `};
+
+    /* Sizes */
+    ${(props) => props.size === 'xsmall' && css`
+        height: 32px;
+        padding: 0 12px;
+        font-size: 0.75rem;
+    `};
+
+    ${(props) => (!props.size || props.size === 'small') && css`
+        height: 40px;
+        padding: 0 18px;
+        font-size: 0.875rem;
+    `};
+
+    ${(props) => props.size === 'large' && css`
+        height: 46px;
+        padding: 0 24px;
+        font-size: 0.95rem;
+    `};
+
+    ${(props) => props.size === 'xlarge' && css`
+        height: 50px;
+        width: 100%;
+        font-size: 1rem;
+    `};
 `;
 
 type ComponentProps = Omit<JSX.IntrinsicElements['button'], 'ref' | keyof Props> & Props;
